@@ -10,6 +10,7 @@ public class ScheduleCreate {
     @NotNull(message = "유저 아이디는 필수 값입니다.")
     private Long userId;
 
+    @NotNull(message = "제목은 필수 값입니다.")
     private String title;
 
     @Size(max = 200, message = "할일은 200자 이내로 작성해주세요.")
