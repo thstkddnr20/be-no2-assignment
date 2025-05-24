@@ -11,50 +11,37 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ktc.assignment2.common.DBUtils.closeConnection;
 import static com.ktc.assignment2.common.DBUtils.getConnection;
 
 @Repository
 public class RepositoryLv3 {
 
     public List<ScheduleLv3Dto> findAll(LocalDate start, LocalDate end, Long userId) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
 
-        try {
-            conn = getConnection();
+        String sql = "select * from lv3schedule as s where date_format(modifiedAt, '%Y-%m-%d') between ? and ? and s.user_id=? order by modifiedAt desc";
 
-            String sql = "select * from lv3schedule as s where date_format(modifiedAt, '%Y-%m-%d') between ? and ? and s.user_id=? order by modifiedAt desc";
-            pstmt = conn.prepareStatement(sql);
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setDate(1, Date.valueOf(start));
             pstmt.setDate(2, Date.valueOf(end));
             pstmt.setLong(3, userId);
-            rs = pstmt.executeQuery();
+            try (ResultSet rs = pstmt.executeQuery()) {
+                List<ScheduleLv3Dto> list = new ArrayList<>();
+                while (rs.next()) {
+                    list.add(new ScheduleLv3Dto(rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime(), rs.getTimestamp(6).toLocalDateTime()));
+                }
 
-            List<ScheduleLv3Dto> list = new ArrayList<>();
-            while (rs.next()) {
-                list.add(new ScheduleLv3Dto(rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime(), rs.getTimestamp(6).toLocalDateTime()));
+                return list;
             }
-
-            return list;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection(rs, pstmt, conn);
         }
     }
 
     public void createSchedule(ScheduleCreate createDto) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
+        String sql = "insert into lv3schedule(user_id, title, content, createdAt, modifiedAt) values(?, ?, ?, ?, ?)";
 
-        try {
-            conn = getConnection();
-
-            String sql = "insert into lv3schedule(user_id, title, content, createdAt, modifiedAt) values(?, ?, ?, ?, ?)";
-            pstmt = conn.prepareStatement(sql);
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, createDto.getUserId());
             pstmt.setString(2, createDto.getTitle());
             pstmt.setString(3, createDto.getContent());
@@ -64,20 +51,13 @@ public class RepositoryLv3 {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection(null, pstmt, conn);
         }
     }
 
     public void addUser(UserAdd userAdd) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
+        String sql = "insert into lv3user(name, password, email, createdAt, modifiedAt) values(?, ?, ?, ?, ?)";
 
-        try {
-            conn = getConnection();
-
-            String sql = "insert into lv3user(name, password, email, createdAt, modifiedAt) values(?, ?, ?, ?, ?)";
-            pstmt = conn.prepareStatement(sql);
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userAdd.getName());
             pstmt.setString(2, userAdd.getPassword());
             pstmt.setString(3, userAdd.getEmail());
@@ -87,8 +67,6 @@ public class RepositoryLv3 {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection(null, pstmt, conn);
         }
     }
 }

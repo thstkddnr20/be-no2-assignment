@@ -6,21 +6,15 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDateTime;
 
-import static com.ktc.assignment2.common.DBUtils.closeConnection;
 import static com.ktc.assignment2.common.DBUtils.getConnection;
 
 @Repository
 public class RepositoryLv2 {
 
     public void update(ScheduleUpdate dto) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
+        String sql = "update lv1schedule set username=?, content=?, modifiedAt=? where id=?";
 
-        try {
-            conn = getConnection();
-
-            String sql = "update lv1schedule set username=?, content=?, modifiedAt=? where id=?";
-            pstmt = conn.prepareStatement(sql);
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, dto.getUsername());
             pstmt.setString(2, dto.getContent());
             pstmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
@@ -30,52 +24,36 @@ public class RepositoryLv2 {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection(null, pstmt, conn);
         }
     }
 
     public String findPasswordById(Long id) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        String sql = "select password from lv1schedule where id=?";
 
-        try {
-            conn = getConnection();
-
-            String sql1 = "select password from lv1schedule where id=?";
-            pstmt = conn.prepareStatement(sql1);
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, id);
-            rs = pstmt.executeQuery();
-
-            String password = null;
-            while (rs.next()) {
-                password = rs.getString(1);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                String password = null;
+                while (rs.next()) {
+                    password = rs.getString(1);
+                }
+                return password;
             }
-            return password;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection(rs, pstmt, conn);
         }
     }
 
     public void deleteById(Long id) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
+        String sql = "delete from lv1schedule where id=?";
 
-        try {
-            conn = getConnection();
-
-            String sql1 = "delete from lv1schedule where id=?";
-            pstmt = conn.prepareStatement(sql1);
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection(null, pstmt, conn);
         }
     }
 }
