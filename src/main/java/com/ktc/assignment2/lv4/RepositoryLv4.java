@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ktc.assignment2.common.DBUtils.closeConnection;
 import static com.ktc.assignment2.common.DBUtils.getConnection;
 
 @Repository
@@ -36,9 +37,7 @@ public class RepositoryLv4 {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) {}
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
-            if (conn != null) try { conn.close(); } catch (SQLException e) {}
+            closeConnection(rs, pstmt, conn);
         }
     }
 }

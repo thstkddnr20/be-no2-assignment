@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDateTime;
 
+import static com.ktc.assignment2.common.DBUtils.closeConnection;
 import static com.ktc.assignment2.common.DBUtils.getConnection;
 
 @Repository
@@ -30,8 +31,7 @@ public class RepositoryLv2 {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
-            if (conn != null) try { conn.close(); } catch (SQLException e) {}
+            closeConnection(null, pstmt, conn);
         }
     }
 
@@ -56,9 +56,7 @@ public class RepositoryLv2 {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) {}
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
-            if (conn != null) try { conn.close(); } catch (SQLException e) {}
+            closeConnection(rs, pstmt, conn);
         }
     }
 
@@ -77,8 +75,7 @@ public class RepositoryLv2 {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
-            if (conn != null) try { conn.close(); } catch (SQLException e) {}
+            closeConnection(null, pstmt, conn);
         }
     }
 }
