@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ktc.assignment2.common.DBUtils.getConnection;
+
 @Repository
 public class RepositoryLv4 {
 
@@ -16,9 +18,7 @@ public class RepositoryLv4 {
         ResultSet rs = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql1 = "select * from lv3schedule as s join lv3user u on s.user_id = u.id limit ?, ?";
             pstmt = conn.prepareStatement(sql1);

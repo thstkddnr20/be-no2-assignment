@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDateTime;
 
+import static com.ktc.assignment2.common.DBUtils.getConnection;
+
 @Repository
 public class RepositoryLv2 {
 
@@ -14,9 +16,7 @@ public class RepositoryLv2 {
         PreparedStatement pstmt = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql = "update lv1schedule set username=?, content=?, modifiedAt=? where id=?";
             pstmt = conn.prepareStatement(sql);
@@ -41,9 +41,7 @@ public class RepositoryLv2 {
         ResultSet rs = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql1 = "select password from lv1schedule where id=?";
             pstmt = conn.prepareStatement(sql1);
@@ -69,9 +67,7 @@ public class RepositoryLv2 {
         PreparedStatement pstmt = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql1 = "delete from lv1schedule where id=?";
             pstmt = conn.prepareStatement(sql1);

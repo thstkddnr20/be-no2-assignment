@@ -5,13 +5,13 @@ import com.ktc.assignment2.lv1.dto.ScheduleLv1Dto;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.TimeZone;
+
+import static com.ktc.assignment2.common.DBUtils.getConnection;
 
 @Repository
 public class RepositoryLv1 {
@@ -22,9 +22,9 @@ public class RepositoryLv1 {
         PreparedStatement pstmt = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
 
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
+
             String sql = "insert into lv1schedule(username, password, title, content, createdAt, modifiedAt) values(?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, dto.getUsername());
@@ -52,9 +52,7 @@ public class RepositoryLv1 {
         ResultSet rs = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql1 = "select * from lv1schedule where date_format(modifiedAt, '%Y-%m-%d') between ? and ? and username=? order by modifiedAt desc";
             pstmt = conn.prepareStatement(sql1);
@@ -85,9 +83,7 @@ public class RepositoryLv1 {
         ResultSet rs = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql1 = "select * from lv1schedule where id=?";
             pstmt = conn.prepareStatement(sql1);

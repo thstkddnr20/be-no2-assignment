@@ -3,7 +3,6 @@ package com.ktc.assignment2.lv3;
 import com.ktc.assignment2.lv3.dto.ScheduleCreate;
 import com.ktc.assignment2.lv3.dto.ScheduleLv3Dto;
 import com.ktc.assignment2.lv3.dto.UserAdd;
-import com.ktc.assignment2.lv4.dto.ScheduleLv4Dto;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,6 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ktc.assignment2.common.DBUtils.getConnection;
 
 @Repository
 public class RepositoryLv3 {
@@ -21,9 +22,7 @@ public class RepositoryLv3 {
         ResultSet rs = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql = "select * from lv3schedule as s where date_format(modifiedAt, '%Y-%m-%d') between ? and ? and s.user_id=? order by modifiedAt desc";
             pstmt = conn.prepareStatement(sql);
@@ -53,9 +52,7 @@ public class RepositoryLv3 {
         PreparedStatement pstmt = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql = "insert into lv3schedule(user_id, title, content, createdAt, modifiedAt) values(?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
@@ -79,9 +76,7 @@ public class RepositoryLv3 {
         PreparedStatement pstmt = null;
 
         try {
-            String url = "jdbc:mysql://localhost/ktc";
-
-            conn = DriverManager.getConnection(url, "root", "");
+            conn = getConnection();
 
             String sql = "insert into lv3user(name, password, email, createdAt, modifiedAt) values(?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
