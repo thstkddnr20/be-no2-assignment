@@ -19,9 +19,21 @@ public class ControllerLv2 {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/schedule/jdbctemplate")
+    public ResponseEntity<?> updateWithJdbcTemplate(@RequestBody ScheduleUpdate updateDto) {
+        service.updateWithJdbcTemplate(updateDto);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/schedule/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody ScheduleDelete deleteDto) {
         service.delete(id, deleteDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/schedule/{id}/jdbctemplate")
+    public ResponseEntity<?> deleteWithJdbcTemplate(@PathVariable Long id, @RequestBody ScheduleDelete deleteDto) {
+        service.deleteWithJdbcTemplate(id, deleteDto);
         return ResponseEntity.ok().build();
     }
 }

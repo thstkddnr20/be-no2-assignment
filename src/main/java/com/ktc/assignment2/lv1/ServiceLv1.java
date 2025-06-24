@@ -1,5 +1,6 @@
 package com.ktc.assignment2.lv1;
 
+import com.ktc.assignment2.jdbctemplate.JdbcTemplateRepository;
 import com.ktc.assignment2.lv1.dto.ScheduleCreate;
 import com.ktc.assignment2.lv1.dto.ScheduleLv1Dto;
 import com.ktc.assignment2.lv5.exception.ScheduleNotFoundException;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class ServiceLv1 {
 
     private final RepositoryLv1 repository;
+    private final JdbcTemplateRepository jdbcTemplateRepository;
 
     public void create(ScheduleCreate dto) {
         repository.save(dto);
@@ -28,4 +30,13 @@ public class ServiceLv1 {
         Optional<ScheduleLv1Dto> dto = repository.findById(id);
         return dto.orElseThrow(ScheduleNotFoundException::new);
     }
+
+    public Long createWithJdbcTemplate(ScheduleCreate createDto) {
+        return jdbcTemplateRepository.save(createDto);
+    }
+
+    public List<ScheduleLv1Dto> searchAllWithJdbcTemplate(String start, String end, String username) {
+        return jdbcTemplateRepository.findAll(LocalDate.parse(start), LocalDate.parse(end), username);
+    }
+
 }

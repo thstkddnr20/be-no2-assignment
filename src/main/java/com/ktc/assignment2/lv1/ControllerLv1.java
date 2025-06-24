@@ -22,12 +22,27 @@ public class ControllerLv1 {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/schedule/jdbctemplate")
+    public ResponseEntity<Long> createWithJdbcTemplate(@RequestBody ScheduleCreate createDto) {
+        Long id = service.createWithJdbcTemplate(createDto);
+        return ResponseEntity.ok(id);
+    }
+
     @GetMapping("/schedule")
     public ResponseEntity<List<ScheduleLv1Dto>> searchAll(
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam String username) {
         List<ScheduleLv1Dto> list = service.searchAll(start, end, username);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/schedule/jdbctemplate")
+    public ResponseEntity<List<ScheduleLv1Dto>> searchAllWithJdbcTemplate(
+            @RequestParam String start,
+            @RequestParam String end,
+            @RequestParam String username) {
+        List<ScheduleLv1Dto> list = service.searchAllWithJdbcTemplate(start, end, username);
         return ResponseEntity.ok(list);
     }
 
